@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Trips</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+</head>
+<body class="index-color raleway">
+    
+
+    <div>
+
+      <!-- HEADER -->
+        <div class="mr-5 ml-5 mt-1 d-flex-end fs-header-medium fc-offwhite">
+            <div class="grow-small">
+              <a class="move-btn-1" href="/dashboard">Dashboard</a>
+            </div>
+            <div class="ml-2">
+              <form role="logout" action="/users/logout">
+                <button class="grow-small submit-btn1 " type="submit">Log Out</button>
+              </form>
+          </div>
+        </div>
+        <!-- HEADER  -->
+
+        <!-- flash message -->
+        <div class="pop-in2 neg-mt-3 d-flex-center  raleway d-flex-column">
+            {% with messages = get_flashed_messages() %}     
+                {% if messages %}                                
+                    {% for message in messages %}             
+                <p>{{message}}<span class="grow-small ml-2 close-btn" onclick="this.parentElement.style.display='none';">&times;</span> </p>                                  
+                    {% endfor %}
+                    {% endif %}
+                {% endwith %}
+          </div>
+          <!-- flash message -->
+    </div>
+
+<!-- ALL TRIPS -->
+<div class="mr-4 ml-4 mt-5 d-flex-center d-flex-column">
+    <h2 class="fs-header-xlarge raleway fc-navy"><em>Pick Your Next Adventure!</em></h2>
+    <table class="table-border1">
+        <thead>
+            <tr>
+                <th>Location</th>
+                <th>Planner</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for trip in trips %}
+            {% if trip.planner.id != user.id %}
+            <tr>
+                <td class="hidden-btn"><a href="/trips/{{ trip.id }}">{{ trip.location }}</a></td>
+                <td>{{ trip.planner.first_name }} {{ trip.planner.last_name }}</td>
+                <td>
+                    <div>
+                        {% if has_joined_groupel(trip.id, user.id) %}
+                        <form id="unjoinForm_{{ trip.id }}" action="/groupels/{{ trip.id }}/delete" method="POST">
+                            <input type="hidden" name="trip_id" value="{{ trip.id }}">
+                            <button class="hidden-btn" type="submit">Unjoin</button>
+                        </form>
+                        {% else %}
+                        <form id="joinForm_{{ trip.id }}" action="/groupels/{{ trip.id }}/join" method="POST">
+                            <input type="hidden" name="trip_id" value="{{ trip.id }}">
+                            <button class="hidden-btn join-btn" type="submit">Join</button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td class="hidden-btn"><a href="/trips/{{ trip.id }}">{{ trip.location }}</a></td>
+                <td>{{ trip.planner.first_name }} {{ trip.planner.last_name }}</td>
+                <td class="d-flex-between">
+                    <form action="/trips/{{ trip.id }}/delete" method="POST">
+                        <input type="hidden" name="trip_id" value="{{ trip.id }}">
+                        <button class="hidden-btn delete-btn neg-mr-5" type="submit">Delete</button>
+                    </form>
+                    <form action="/trips/{{ trip.id }}/edit" method="GET">
+                        <input type="hidden" name="trip_id" value="{{ trip.id }}">
+                        <button class="hidden-btn neg-ml-5" type="submit">Edit</button>
+                    </form>
+                </td>
+            </tr>            
+            {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<!-- ALL TRIPS -->
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var deleteButtons = document.querySelectorAll('.delete-btn');
+    
+        deleteButtons.forEach(function(button) {
+            button.addEventListener('click', function(event) {
+                var result = confirm("There may be other groupelers on this trip, are you sure you want to delete it?");
+                if (!result) {
+                    event.preventDefault();
+                }
+            });
+        });
+    });
+    </script>
+
+
+
+</body>
+</html>
+

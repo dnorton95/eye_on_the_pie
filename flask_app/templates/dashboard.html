@@ -7,33 +7,30 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Righteous&family=Shrikhand&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
   </head>
-  <body class="pr-3 pl-3 silkscreen-regular">
+  <body class="fade-in2 pr-3 pl-3 index-color">
 
 <!-- HEADER -->
-    <div class="fc-red shrikhand-regular mr-5 ml-5 mt-1 d-flex-between fs-header-medium fc-offwhite">
+    <div class="fc-navy raleway mr-5 ml-5 mt-1 d-flex-between fs-header-medium fc-offwhite">
         <div class="flex2">
-          <h1 class="fs-header-large">Welcome, {{user.first_name}}!</h1>
+          <h1 class="raleway fs-header-medium"><em>Groupel</em></h1>
         </div>
         <div>
-          <form action="/pies">
-            <button class="grow-small submit-btn1 quicksand" type="submit">View All Pies</button>
+          <form action="/trips">
+            <button class="grow-small submit-btn1" type="submit">View All Trips</button>
           </form>
         </div>
         <div class="ml-2">
           <form role="logout" action="/users/logout">
-            <button class="grow-small submit-btn1 quicksand" type="submit">Log Out</button>
+            <button class="grow-small submit-btn1" type="submit">Log Out</button>
           </form>
       </div>
     </div>
-        <!-- HEADER -->
+<!-- HEADER -->
 
             <!-- flash message -->
-            <div class="neg-mt-3 d-flex-center d-flex-column">
+            <div class="neg-mt-3 raleway d-flex-center d-flex-column">
               {% with messages = get_flashed_messages() %}     <!-- declare a variable called messages -->
                                   {% if messages %}                            <!-- check if there are any messages -->
                                       {% for message in messages %}            <!-- loop through the messages -->
@@ -44,62 +41,123 @@
             </div>
               <!-- flash message -->
 
-              
 
-      <div class="d-flex-center">
-        <div class="mt-4 d-flex-center">
-          <!-- USER PIES -->
-          <div>
-            <div>
-              <!-- USER PIES -->
-            <div class="d-flex-center d-flex-column">
-              <div class="fc-red text-center">
-                <h2>Pies by {{user.first_name}}:</h2>
-              </div>
-              <table class="table-border1">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for pie in user_pies %}
-                        <tr>
-                            <td>{{ pie.recipe }}</td>
-                            <td class="d-flex-between">
-                                    <a class="mr-2" href="/pies/{{ pie.id }}/edit">Edit</a>
-                                    <form id="deleteForm" class="delete-pie-form" action="/pies/{{ pie.id }}/delete" method="POST">
-                                      <!-- Add any necessary hidden fields or additional form elements here -->
-                                      <button id="deleteButton" class="hidden-btn" type="submit" >Delete</button>
-                                  </form>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            </div>
-            </div>
-          </div>
-            <!-- USER PIES -->
-        
-            <!-- NEW PIE -->
-            <div class=" dashboard-table d-flex-center d-flex-column">
-              <form class="p-2 border1 d-flex-center d-flex-column" action="/pies/create" method="POST">
-            <h2 class="neg-mt-1">Add a New Pie:</h2>
-            <label for="recipe">Name:</label>
-            <input class="input-shade border" type="text" id="recipe" name="recipe">
-            <label class="mt-1" for="filling">Filling:</label>
-            <input class="input-shade border" type="text" id="filling" name="filling">
-            <label class="mt-1" for="crust">Crust:</label>
-            <input class="input-shade border" type="text" id="crust" name="crust">
-            <input type="hidden" name="user_id" value="{{ user.id }}">
-            <input class="grow-small submit-btn1 mt-1" type="submit" value="Submit">
-              </form>
-          </div>
-          <!-- NEW PIE -->
+<!-- BODY -->
+    <div class="d-flex-center">
+
+
+    <!-- LEFT COLUMN -->
+      <div class="d-flex-column flex1 mr-3">
+
+        <!-- INTRO -->
+        <div class="border1 p-1">
+          <h2 class="raleway fs-header-large"><em>Hey, {{user.first_name}}!</em></h2>
+
+          <p class="fc-navy text-center">Grab your friends. Get there together.</p>
         </div>
+        <!-- INTRO -->
+
+        <!-- CREATE/JOIN -->
+          <div class="border1 d-flex-center d-flex-column mt-3">
+            <form class="mt-4 mb-2" action="/trips/new">
+              <button class="grow-small submit-btn2" type="submit">Plan a Trip!</button>
+            </form>
+            <form class="mb-4" action="/trips">
+              <button class="grow-small submit-btn2" type="submit">Join a Trip!</button>
+            </form>
+          </div>
+      <!-- CREATE/JOIN -->
+
       </div>
+    <!-- LEFT COLUMN -->
+
+
+<!-- RIGHT COLUMN -->
+<div class="border1 p-2 flex1 d-flex-center d-flex-column">
+  <div class="fc-navy text-center">
+      <h2 class="raleway">My Upcoming Trips:</h2>
+  </div>
+  <table class="table-border1">
+      <thead>
+          <tr>
+              <th>Location</th>
+              <th>Start</th>
+              <th>End</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% for trip in upcoming_trips %}
+          <tr>
+              <td class="hidden-btn"><a href="/trips/{{ trip.id }}">{{ trip.location }}</a></td>
+              <td>{{ trip.check_in.strftime("%m/%d/%Y") }}</td>
+              <td>{{ trip.check_out.strftime("%m/%d/%Y") }}</td>
+          </tr>
+          {% endfor %}
+          {% for trip in joined_upcoming_trips %}
+          <tr>
+              <td class="hidden-btn"><a href="/trips/{{ trip.id }}">{{ trip.location }}</a></td>
+              <td>{{ trip.check_in }}</td>
+              <td>{{ trip.check_out }}</td>
+          </tr>
+          {% endfor %}
+          {% if not upcoming_trips and not joined_upcoming_trips %}
+          <tr>
+              <td colspan="4" class="text-center">You don't have any upcoming trips.</td>
+          </tr>
+          {% endif %}
+      </tbody>
+  </table>
+
+  <div class="fc-navy text-center">
+      <h2 class="raleway">My Previous Trips:</h2>
+  </div>
+  <table class="table-border1">
+      <thead>
+          <tr>
+              <th>Location</th>
+              <th>Actions</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% for trip in previous_trips %}
+          <tr>
+            <td class="hidden-btn"><a href="/trips/{{ trip.id }}">{{ trip.location }}</a></td>
+            <td class="d-flex-between">
+                  <a class="mr-2" href="/trips/{{ trip.id }}/edit">Edit</a>
+                  <form id="deleteForm" class="delete-trip-form" action="/trips/{{ trip.id }}/delete" method="POST">
+                      <!-- Add any necessary hidden fields or additional form elements here -->
+                      <button id="deleteButton" class="hidden-btn" type="submit">Delete</button>
+                  </form>
+              </td>
+          </tr>
+          {% endfor %}
+          {% for trip in joined_previous_trips %}
+          <tr>
+            <td class="hidden-btn"><a href="/trips/{{ trip.id }}">{{ trip.location }}</a></td>
+            <td class="d-flex-between">
+                  <a class="mr-2" href="/trips/{{ trip.id }}/edit">Edit</a>
+                  <form id="deleteForm" class="delete-trip-form" action="/trips/{{ trip.id }}/delete" method="POST">
+                      <!-- Add any necessary hidden fields or additional form elements here -->
+                      <button id="deleteButton" class="hidden-btn" type="submit">Delete</button>
+                  </form>
+              </td>
+          </tr>
+          {% endfor %}
+          {% if not previous_trips and not joined_previous_trips %}
+          <tr>
+              <td colspan="4" class="text-center">You don't have any previous trips.</td>
+          </tr>
+          {% endif %}
+      </tbody>
+  </table>
+</div>
+<!-- RIGHT COLUMN -->
+
+
+
+
+    </div>
+<!-- BODY -->
 
   </body>
 </html>

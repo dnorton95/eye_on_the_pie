@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{trip.location}} Details</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+</head>
+<body class="fade-in2 pb-p-2 pr-3 pl-3 index-color raleway">
+
+
+    <!-- HEADER -->
+<div class="pr-p-1 mb-3 pl-p-1 d-flex-between">
+    <div class="d-flex-column d-flex-start">
+        <h5>Get ready for your trip to</h5>
+        <h1 class="fs-header-xlarge neg-mt-3">{{trip.location}}!</h1>
+    </div>
+    <div>
+        <div class="mr-5 ml-5 mt-1 d-flex-end fs-header-medium">
+            <div class="grow-xsmall">
+                <a class="move-btn-1 mr-2" href="/dashboard">Dashboard</a>
+            </div>
+            <div class="grow-xsmall">
+                <a class="move-btn-1" href="/trips">All Trips</a>
+            </div>
+            <div class="ml-2">
+                <form role="logout" action="/users/logout">
+                    <button class="grow-xsmall submit-btn1 quicksand" type="submit">Log Out</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+    <!-- HEADER -->
+
+<div class="pr-p-1 pl-p-1 d-flex-center">
+    <div class="d-flex-between">
+        <!-- LEFT COLUMN -->
+        <div class="d-flex-column neg-mt-3">
+            <!-- LODGING CARD -->
+            <div class="card p-3 d-flex-column">
+                <div class="d-flex-center">
+                    <div>
+                        <img class="img-container" src="{{ url_for('static', filename= trip.photo_path.replace('flask_app/static/', '')) }}" alt="Trip Photo" style="max-width: 100px;">
+                    </div>
+                    <div class="text-start">
+                        <ul>
+                            <li><strong>Booking:</strong> {{trip.booking_title}}</li>
+                            <li><strong>Booking Link:</strong>
+                                <span class="hidden-btn" id="linkValue">
+                                    <a href="{{ trip.booking_link }}">{{ trip.booking_link[:45] }}{{ '...' if trip.booking_link|length > 45 else '' }}</a>
+                                </span>
+                            </li>        
+                            <li><strong>Address:</strong> 
+                                <a class="hidden-btn" href="https://www.google.com/maps/search/?api=1&query={{ trip.address }}" target="_blank">{{ trip.address }}</a>
+                            </li>
+                                <li><strong>Check-in Date:</strong> {{ trip.check_in.strftime("%m/%d/%Y") }}</li>
+                                <li><strong>Check-out Date:</strong> {{ trip.check_out.strftime("%m/%d/%Y") }}</li>
+                        </ul>
+                    </div>
+                </div>
+                <div>
+                    <p>Planner Notes:</p>
+                    <p class="neg-mt-2">{{trip.notes}}</p>
+                </div>
+            </div>
+            <!-- LODGING CARD -->
+            <!-- GROUPELERS -->
+            <div class="mt-5 p-3 card d-flex-center">
+                <div>
+                    <button id="dropdown-btn" class="submit-btn3 glow grow-small">Who's Coming?</button>
+                    <div id="user-list" style="display: none;">
+                            <p>{{trip.user.first_name}} {{trip.user.last_name}}</p>
+                        {% for groupeler in groupels %}
+                            <p>{{ groupeler.user.first_name }} {{ groupeler.user.last_name }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <!-- GROUPELERS -->
+        </div>
+    
+        <!-- LEFT COLUMN -->
+    
+        <!-- RIGHT COLUMN -->
+        <div class= d-flex-column mr-p-2">
+            <!-- TOTAL COST CARD -->
+            <div class="mb-5 d-flex-column">
+                <div class="raleway text-center card p-2">
+                    <h3 class="raleway" id="totalCost">Total Cost ${{ trip.total_cost }}</h3>
+                    {% if trip.groupels %}
+                        {% set my_total_cost = trip.total_cost / (trip.groupels|length + 1) %}
+                        <h4 class="raleway" id="myTotalCost">My Total Cost: ${{ '%.2f' | format(my_total_cost) }}</h4>
+                    {% else %}
+                        <h4 class="raleway" id="myTotalCost">My Total Cost: ${{ trip.total_cost }}</h4>
+                    {% endif %}
+                </div>
+            </div>
+            <!-- TOTAL COST CARD -->
+    
+    
+    
+    
+            <!-- ITINERARY CARD -->
+            <div class="card pl-3 p-2">
+                <h2 class="text-center raleway">{{trip.user.first_name}}'s Itinerary</h2>
+                <pre class="raleway itinerary">{{ trip.itinerary }}</pre>        </div>
+            <!-- ITINERARY CARD -->
+        </div>
+        <!-- RIGHT COLUMN -->
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const dropdownBtn = document.getElementById("dropdown-btn");
+        const userList = document.getElementById("user-list");
+
+        dropdownBtn.addEventListener("click", function() {
+            if (userList.innerHTML.trim() === "") {
+                userList.innerHTML = "<p>Nobody has joined this trip yet!</p>";
+            }
+            if (userList.style.display === "none") {
+                userList.style.display = "block";
+            } else {
+                userList.style.display = "none";
+            }
+        });
+    });
+
+    window.onload = function() {
+        updateLink();
+    };
+
+    function updateLink() {
+        var bookingLink = document.getElementById("booking_link").value;
+        var linkElement = document.getElementById("linkValue");
+        linkElement.innerHTML = '<a href="' + bookingLink + '">' + bookingLink + '</a>';
+    }
+
+    function updateLink() {
+            var bookingLink = document.getElementById("booking_link").value;
+            var linkElement = document.getElementById("linkValue");
+            if (bookingLink.length > 45) {
+                bookingLink = bookingLink.substring(0, 45) + '...';
+            }
+            linkElement.innerHTML = '<a href="' + document.getElementById("booking_link").value + '">' + bookingLink +
+                '</a>';
+        }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit trips</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+</head>
+<body class="fade-in raleway index-color">
+
+  <!-- HEADER -->
+    <div class="pl-3 d-flex-between">
+      <div class="flex1 fc-navy raleway">
+        <h1><em>Gotta fix something?</em></h1>
+      </div>
+      <div class="flex3 mr-5 ml-5 mt-1 d-flex-end fs-header-medium">
+          <div class="grow-xsmall mr-2">
+            <a class="move-btn-1" href="/dashboard">Dashboards</a>
+          </div>
+          <div class="grow-xsmall">
+            <a class="move-btn-1" href="/trips">All Trips</a>
+          </div>
+          <div class="ml-2">
+            <form role="logout" action="/users/logout">
+              <button class="grow-xsmall submit-btn1 quicksand" type="submit">Log Out</button>
+            </form>
+        </div>
+      </div>
+    </div>
+<!-- HEADER -->
+
+
+
+        <!-- flash message -->
+        <div class="neg-mt-3 raleway d-flex-center d-flex-column">
+          {% with messages = get_flashed_messages() %}     <!-- declare a variable called messages -->
+                              {% if messages %}                            <!-- check if there are any messages -->
+                                  {% for message in messages %}            <!-- loop through the messages -->
+                          <p>{{message}}<span class="grow-small ml-2 close-btn" onclick="this.parentElement.style.display='none';">&times;</span> </p>                   <!-- display each message in a paramraph tag -->
+                                  {% endfor %}
+                  {% endif %}
+              {% endwith %}
+        </div>
+          <!-- flash message -->
+
+<!-- EDIT TRIP -->
+<div class="pr-p-7 pl-p-7">
+  <form class="p-3 border1 d-flex-center d-flex-column" action="/trips/update" method="POST" enctype="multipart/form-data">
+      <label for="location">Location:</label>
+      <input class="input-shade border" type="text" id="location" name="location" value="{{trip.location}}">
+      <label class="mt-1" for="booking_link">Booking Link:</label>
+      <input class="input-shade border" id="booking_link" name="booking_link" value="{{trip.booking_link}}">
+      <label class="mt-1" for="booking_title">Booking Title:</label>
+      <input class="input-shade border" id="booking_title" name="booking_title" value="{{trip.booking_title}}">
+      <label class="mt-1" for="address">Address:</label>
+      <input class="input-shade border" id="address" name="address" value="{{trip.address}}">
+      <label class="mt-1" for="check_in">Check-in Date:</label>
+      <input class="input-shade border" type="date" id="check_in" name="check_in" value="{{trip.check_in}}">
+      <label class="mt-1" for="check_out">Check-out Date:</label>
+      <input class="input-shade border" type="date" id="check_out" name="check_out" value="{{trip.check_out}}">
+      <label class="mt-1" for="notes">Trip Notes:</label>
+      <input class="input-shade border" id="notes" name="notes" value="{{trip.notes}}">
+      <label class="mt-1" for="itinerary">Your Itinerary:</label>
+      <textarea class="input-shade border" id="itinerary" name="itinerary">{{trip.itinerary}}</textarea>
+      <label class="mt-1" for="total_cost">Total Cost:</label>
+      <input class="input-shade border" type="text" id="total_cost" name="total_cost" value="{{trip.total_cost}}">
+      <label class="mt-1" for="photo">Photo:</label>
+      <input class="input-shade border" type="file" id="photo" name="photo"> 
+      <input class="grow-small submit-btn2 mt-1" type="submit" value="Submit">
+      <input type="hidden" name="trip_id" value="{{trip.id}}">
+  </form>
+</div>
+<!-- EDIT TRIP -->
+
+
+
+
+
+
+
+</body>
+</html>

@@ -3,33 +3,44 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pies</title>
+    <title>Groupel</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Righteous&family=Shrikhand&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
   </head>
-  <body class="silkscreen-regular">
-    <div class="d-flex-start">
-        <h1 class="fc-red shrikhand-regular fs-header-xlarge ml-5">Pie Lovers</h1>
-    </div>
-    <div class="neg-mt-3 d-flex-center d-flex-column">
-        {% with messages = get_flashed_messages() %}     <!-- declare a variable called messages -->
-                            {% if messages %}                            <!-- check if there are any messages -->
-                                {% for message in messages %}            <!-- loop through the messages -->
-                            <p>{{message}}<span class="grow-small ml-2 close-btn" onclick="this.parentElement.style.display='none';">&times;</span> </p>                   <!-- display each message in a paramraph tag -->
-                                {% endfor %}
-                {% endif %}
-            {% endwith %}
+  <body class="index-color raleway silkscreen-regular">
 
+
+<!-- HEADER -->
+    <div class="fade-in d-flex-between">
+        <div>
+            <h1 class="fc-navy raleway fs-header-xlarge ml-5"><em>Groupel</em></h1>
+        </div>
+        <div>
+            <h2 class="fade-in raleway mr-5 fc-navy"><em>Get there together!</em></h2>
+        </div>
     </div>
-    
-    <div class="d-flex-center">
-        <div class="mt-3 small-d-flex-column d-flex-around">
-            <div class="flex1 d-flex-center d-flex-column mr-1">
+<!-- HEADER -->
+
+        <!-- flash message -->
+        <div class="raleway neg-mt-3 d-flex-center d-flex-column">
+            {% with messages = get_flashed_messages() %}     <!-- declare a variable called messages -->
+                                {% if messages %}                            <!-- check if there are any messages -->
+                                    {% for message in messages %}            <!-- loop through the messages -->
+                            <p>{{message}}<span class="grow-small ml-2 close-btn" onclick="this.parentElement.style.display='none';">&times;</span> </p>                   <!-- display each message in a paramraph tag -->
+                                    {% endfor %}
+                    {% endif %}
+                {% endwith %}
+          </div>
+            <!-- flash message -->
+
+
+<!-- BODY -->
+<div class="plane raleway d-flex-center">
+    <div class="mt-3 small-d-flex-column d-flex-around border3 p-3">
+    <!-- REGISTER -->
+            <div class="pop-in flex1 d-flex-center d-flex-column mr-1">
                 <form class="p-2 border1 d-flex-center d-flex-column" action="/users/register" method="POST">
                     <h2 class="neg-mt-1">Register:</h2>
                     <label for="first_name">First Name:</label>
@@ -43,22 +54,28 @@
                     <div id="passwordAlert" style="margin-top: 2px; font-size: 8px; background-color: white; position: relative; display: none; color: red;"></div>
                     <label class="gt-1" for="password_confirm">Confirm Password:</label>
                     <input class="silkscreen-regular input-shade border" type="password" id="password_confirm" name="password_confirm">
-                    <input class="silkscreen-regular submit-btn1 mt-1" type="submit" value="Submit">
+                    <input class="raleway submit-btn2 mt-1" type="submit" value="Submit">
                 </form>
             </div>
-
-            <div class="flex1 d-flex-column d-flex-center ml-1">
+            <!-- REGISTER -->
+            <!-- LOGIN -->
+            <div class="pop-in flex1 d-flex-column d-flex-center ml-1">
                 <form class="p-3 border1 d-flex-column d-flex-center" action="/users/login" method="POST">
                     <h2 class="neg-mt-1">Log In:</h2>
                     <label for="email">Email:</label>
                     <input class="silkscreen-regular input-shade border" type="text" id="email" name="email">
                     <label for="password">Password:</label>
                     <input class="silkscreen-regular input-shade border" type="password" id="password" name="password">
-                    <input class="mt-1 submit-btn1" type="submit" value="Submit">
+                    <input class="mt-1 submit-btn2" type="submit" value="Submit">
                 </form>
             </div>
+            <!-- LOGIN -->
         </div>
     </div>
+<!-- BODY -->
+
+
+<!-- RESPONSIVE JS -->
     <script>
         document.getElementById('password').addEventListener('focus', function() {
             // Get the password input element
@@ -73,5 +90,7 @@
             }
         });
     </script>
+<!-- RESPONSIVE JS -->
+
 </body>
 </html>

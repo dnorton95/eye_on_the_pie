@@ -1,4 +1,4 @@
-# Replace all pies with the proper name as well as the DB name!
+# Replace all trips with the proper name as well as the DB name!
 from flask_app.config.mysqlconnection import connectToMySQL
 from flask import flash
 import re
@@ -8,7 +8,7 @@ PASSWORD_REGEX = re.compile(r"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}
 
 
 class User:
-    DB = "pies_schema"  # Database name goes here!
+    DB = "trips_schema"  # Database name goes here!
 
     def __init__(self, data):
         self.id = data["id"]
@@ -18,7 +18,7 @@ class User:
         self.password = data["password"]
         self.created_at = data["created_at"]
         self.updated_at = data["updated_at"]
-        self.pies = []
+        self.trips = []
 
     @staticmethod
     def validate_register(user):
@@ -110,9 +110,9 @@ class User:
         return user
 
     @classmethod
-    def find_user_by_id_with_pies(cls, user_id):
-        query = """SELECT * FROM users LEFT JOIN pies ON users.id = 
-        pies.user_id WHERE users.id = %(user_id)s"""
+    def find_user_by_id_with_trips(cls, user_id):
+        query = """SELECT * FROM users LEFT JOIN trips ON users.id = 
+        trips.user_id WHERE users.id = %(user_id)s"""
         data = {"user_id": user_id}
         list_of_dicts = connectToMySQL(User.DB).query_db(query, data)
 
@@ -122,18 +122,25 @@ class User:
         
         user = User(list_of_dicts[0])
         for each_dict in list_of_dicts:
-            if each_dict["pies.id"] != None:
-                pie_input_data = {
-                    "id": each_dict["pies.id"],
-                    "recipe": each_dict["recipe"],
-                    "filling": each_dict["filling"],
-                    "crust": each_dict["crust"],
-                    "created_at": each_dict["pies.created_at"],
-                    "updated_at": each_dict["pies.updated_at"],
+            if each_dict["trips.id"] != None:
+                trip_input_data = {
+                    "id": each_dict["trips.id"],
+                    "location": each_dict["location"],
+                    "booking_link": each_dict["booking_link"],
+                    "booking_title": each_dict["booking_title"],
+                    "address": each_dict["address"],
+                    "check_in": each_dict["check_in"],
+                    "check_out": each_dict["check_out"],
+                    "notes": each_dict["notes"],
+                    "itinerary": each_dict["itinerary"],
+                    "total_cost": each_dict["total_cost"],
+                    "photo": each_dict["photo"],
+                    "created_at": each_dict["trips.created_at"],
+                    "updated_at": each_dict["trips.updated_at"],
                     "user_id": each_dict["user_id"],
                 }
-                pie = pie.Pie(pie_input_data)
-                user.pies.append(pie)
+                trip = trip.Trip(trip_input_data)
+                user.trips.append(trip)
 
         return user
     
